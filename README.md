@@ -8,24 +8,26 @@ This component is a WIP for using Hitachi airCloud (Hitachi AC with WIFI module 
 
 ## airCloud.sh usage
 ```shell
-./airCloud.sh <action> <room> <mode> <temperature> 
+./airCloud.sh <action> <room> <temperature> <mode> <fanspeed> <fanswing>
 
 <action> : on (Power On) / off (Power Off) / powerstatus (AC Power Status) / modestatus (AC Mode Status) / roomtemperature (Room Temperature) / idutemperature (AC Thermostat Temperature) / websocatdebug (display Hitachi websocket full result in json)
-<room> : Your room named like in your Hitachi airCloud app 
-<mode> : COOLING / HEATING / FAN
+<room> : Name of the room on the Aircloud application
 <temperature> : Target temperature
+<mode> : COOLING / HEATING / FAN / DRY / AUTO(defaut)
+<fanspeed> : LV1 / LV2 / LV3 / LV4 / LV5 / AUTO(defaut)
+<fanswing> :  VERTICAL / OFF(defaut)
 ```
 
 
 
 Example : 
 ```shell
-./airCloud.sh <action> <room> <mode> <temperature> 
+./airCloud.sh <action> <room> <temperature> <mode> <fanspeed> <fanswing>
 ```
 
 ## Installation (Manual)
 1. Download this repository as a ZIP (green button, top right) and unzip the archive
-2. Copy `/scripts/aircloud.sh` to your `<config_dir>/scripts/` directory
+2. Copy `aircloud.sh` to your `<config_dir>/` directory
 3. Modify aircloud.sh with :
    * your Hitachi airCloud credentials in base64 (or in clear text as you want ...) : 
    ```shell
@@ -37,7 +39,7 @@ Example :
    ```
    * The path to websocat binary
    ```shell
-   websocatbinary="/opt/scripts/websocat.x86_64-unknown-linux-musl"
+   websocatbinary="<config_dir>/script/websocat.x86_64-unknown-linux-musl"
    ```
    
 4. Create a new folder (or reuse it) `<config_dir>/climate` and copy climate folder content
@@ -55,11 +57,11 @@ switch:
          friendly_name: 'Heater Living Room'
          unique_id: switch_ac_living_room_heater
          command_on: >
-             sh /opt/scripts/aircloud.sh on Séjour HEATING 22
+             sh aircloud.sh on Séjour 22 HEATING
          command_off: >
-             sh /opt/scripts/aircloud.sh off Séjour HEATING 22
+             sh aircloud.sh off Séjour 22 HEATING
          command_state: >
-             sh /opt/scripts/aircloud.sh powerstatus Séjour
+             sh aircloud.sh powerstatus Séjour
          value_template: >
            {% if value == "ON" %}
            true
@@ -70,9 +72,9 @@ switch:
          friendly_name: 'Cooler Living Room'
          unique_id: switch_ac_living_room_cooler
          command_on: >
-             sh /opt/scripts/aircloud.sh on Séjour COOLING 22
+             sh /opt/scripts/aircloud.sh on Séjour 22 COOLING
          command_off: >
-             sh /opt/scripts/aircloud.sh off Séjour COOLING 22
+             sh /opt/scripts/aircloud.sh off Séjour 22 COOLING
          command_state: >
              sh /opt/scripts/aircloud.sh powerstatus Séjour
          value_template: >
